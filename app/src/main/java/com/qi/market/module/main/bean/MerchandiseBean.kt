@@ -17,4 +17,6 @@ class MerchandiseBean {
     var description: String = ""//商品描述
     var createTime: String = ""//创建时间
     var num = 0
+    var isChecked: Boolean = false
+    var isInvalid: Boolean = false
 }

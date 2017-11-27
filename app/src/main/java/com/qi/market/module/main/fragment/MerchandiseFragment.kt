@@ -47,10 +47,11 @@ class MerchandiseFragment : BaseFragment() {
     }
 
 
-    fun refresh(data: List<MerchandiseBean>) {
+    fun refresh(data: List<MerchandiseBean>, oldId: Long?) {
         mMainActivity.presenter.changeMerchandiseCheckedNum(data,{
+            if (mMainActivity.mMerchandiseCategoryId!=oldId)
+                return@changeMerchandiseCheckedNum
             mMerchandiseAdapter!!.notifyDataSetChanged(data)
-
         })
     }
 

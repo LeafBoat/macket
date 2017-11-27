@@ -30,6 +30,16 @@
             android:text="搜索"
             app:position="middle" />
 
+
+        <TextView
+            android:id="@+id/shoppingCartActionView"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="right|top"
+            android:text="0"
+            android:background="@drawable/buy_car"
+            app:position="right" />
+
     </com.qi.market.widget.TitleView>
 
 

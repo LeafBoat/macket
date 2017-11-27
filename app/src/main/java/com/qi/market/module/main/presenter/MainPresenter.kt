@@ -6,7 +6,6 @@ import com.qi.market.module.main.bean.MerchandiseCategoryBean
 import com.qi.market.module.main.model.MainService
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
 import com.qi.market.network.RetrofitClient
-import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.concurrent.Executors
@@ -17,11 +16,11 @@ import java.util.concurrent.Executors
  */
 class MainPresenter(activity: MainActivity) {
     private val mActivity = activity
-    var service = RetrofitClient.create(MainService::class.java)
+    private var service = RetrofitClient.create(MainService::class.java)
     private val mDao = ShoppingCartDao(mActivity)
-    var mThreadFactory = Executors.defaultThreadFactory()
+    private var mThreadFactory = Executors.defaultThreadFactory()!!
     /**
-     * 获取商品进类别
+     * 获取商品类别
      */
     fun merchandiseCategory() {
         service.getMerchandiseCategory()
@@ -30,6 +29,7 @@ class MainPresenter(activity: MainActivity) {
                 .subscribe({ list: List<MerchandiseCategoryBean> ->
                     mActivity.showContentView()
                     mActivity.refreshMenu(list!!)//刷新菜单栏
+                    mActivity.mMerchandiseCategoryId = list[0].id!!
                     merchandiseList(list[0])//
                     mActivity.fragmentShowProgressbar()//商品列表展示progressbar
                 }, {
@@ -49,7 +49,7 @@ class MainPresenter(activity: MainActivity) {
                         mActivity.fragmentShowErrorView()
                     } else {
                         mActivity.fragmentShowContentView()
-                        mActivity.refreshList(list)
+                        mActivity.refreshList(list,merchandiseCategoryBean.id)
                     }
                 }, {
                     mActivity.fragmentShowErrorView()

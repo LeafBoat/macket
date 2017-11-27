@@ -13,6 +13,7 @@ import com.qi.market.module.main.bean.MerchandiseCategoryBean
 import com.qi.market.module.main.fragment.MerchandiseFragment
 import com.qi.market.module.main.presenter.MainPresenter
 import com.qi.market.module.search.SearchActivity
+import com.qi.market.module.shoppingcart.activity.ShoppingCartActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
     lateinit var presenter: MainPresenter
     private var mMenuAdapter: MerchandiseMenuAdapter? = null
-
+    var mMerchandiseCategoryId: Long=-1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,9 @@ class MainActivity : BaseActivity() {
         presenter = MainPresenter(this)
         searchView.setOnClickListener {
             startActivity(Intent(it.context, SearchActivity::class.java))
+        }
+        shoppingCartActionView.setOnClickListener {
+            ShoppingCartActivity.startActivity(it.context)
         }
         setMenu()
         setList()
@@ -49,9 +53,11 @@ class MainActivity : BaseActivity() {
     /**
      * 刷新商品列表
      */
-    fun refreshList(data: List<MerchandiseBean>) {
+    fun refreshList(data: List<MerchandiseBean>, oldId: Long?) {
+        if (mMerchandiseCategoryId != oldId)
+            return
         var fragment = supportFragmentManager.findFragmentByTag(MERCHANDISE_FRAGMENT) as MerchandiseFragment
-        fragment.refresh(data)
+        fragment.refresh(data,oldId)
     }
 
     /**
@@ -62,6 +68,7 @@ class MainActivity : BaseActivity() {
         list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         mMenuAdapter = MerchandiseMenuAdapter(null)
         mMenuAdapter!!.mOnItemClickListener = { merchandiseCategoryBean, _ ->
+            mMerchandiseCategoryId = merchandiseCategoryBean.id!!
             presenter.merchandiseList(merchandiseCategoryBean)
         }
         list.adapter = mMenuAdapter
