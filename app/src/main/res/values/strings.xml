@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">惠萌超市</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_nick">用户名</string>
+    <string name="prompt_password">密码</string>
+    <string name="prompt_confirm">确认密码</string>
+    <string name="prompt_phone">手机号</string>
+    <string name="prompt_qq">qq号</string>
+    <string name="prompt_emial">邮箱</string>
+    <string name="prompt_activitycode">激活码</string>
+    <string name="action_sign_in">登录</string>
+    <string name="action_sign_up">注册</string>
+    <string name="intent_login">点我去登录</string>
+    <string name="intent_register">点我去注册</string>
+    <string name="action_sign_in_short">登录</string>
+    <string name="error_invalid_phone">手机号输入错误</string>
+    <string name="error_invalid_password">密码太短</string>
+    <string name="error_incorrect_password">密码错误</string>
+    <string name="error_field_required">请输入手机号</string>
+    <string name="tag_common">tag_common</string>
+    <string name="tag_register">tag_register</string>
+    <string name="tag_login">tag_login</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="error_invalid_nick">请填写正确的用户名</string>
+    <string name="error_invalid_confirm">确认密码错误</string>
+    <string name="error_invalid_email">邮箱错误</string>
+    <string name="total_money">合计：￥%$f</string>
+</resources>

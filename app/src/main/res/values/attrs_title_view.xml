@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="TitleView">
+        <attr name="position" format="enum" >
+            <enum name="left" value="0" />
+            <enum name="middle" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>
