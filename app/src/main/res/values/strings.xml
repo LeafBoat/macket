@@ -29,4 +29,7 @@
     <string name="error_invalid_confirm">确认密码错误</string>
     <string name="error_invalid_email">邮箱错误</string>
     <string name="total_money">合计：￥%1$.2f</string>
+    <!--确认订单-->
+    <string name="merchandiseNum">共%1$d件</string>
+    <string name="actuallyPaid">实付款：￥%1$.2f</string>
 </resources>

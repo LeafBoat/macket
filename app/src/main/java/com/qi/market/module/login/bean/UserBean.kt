@@ -5,7 +5,7 @@ package com.qi.market.module.login.bean
  * Created by Qi on 2017/11/16.
  */
 class UserBean {
-    var id: Int? = null
+    var id: Long = -1
     var username: String = ""// 用户名
     var password: String = ""// 密码
     var createtime: String = "" // 创建时间

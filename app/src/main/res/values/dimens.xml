@@ -6,4 +6,10 @@
     <!--商品详情页-->
     <dimen name="merchandise_detail_pic_height">300dp</dimen>
     <dimen name="title_height">48dp</dimen>
+
+    <!--确认订单-->
+    <dimen name="btn_submit_vertical_padding">10dp</dimen>
+    <dimen name="btn_submit_horizontal_padding">16dp</dimen>
+    <dimen name="img_width">48dp</dimen>
+    <dimen name="img_height">48dp</dimen>
 </resources>

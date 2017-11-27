@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="bg_search">#e9ebee</color>
     <color name="colorGray">#999999</color>
+
+    <!--确认订单-->
+    <color name="colorActuallyPaid">#f00</color>
 </resources>

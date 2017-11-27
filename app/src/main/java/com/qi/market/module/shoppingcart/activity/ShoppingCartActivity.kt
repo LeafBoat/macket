@@ -3,16 +3,16 @@ package com.qi.market.module.shoppingcart.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.Toast
 import com.qi.market.R
 import com.qi.market.base.BaseActivity
+import com.qi.market.module.main.bean.MerchandiseBean
+import com.qi.market.module.order.activity.OrderActivity
 import com.qi.market.module.shoppingcart.ShoppingCartPresenter
-import com.qi.market.module.shoppingcart.adapter.OrderAdapter
 import com.qi.market.module.shoppingcart.adapter.ShoppingCartAdapter
-import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
 import kotlinx.android.synthetic.main.activity_shopping_cart.*
 
 /**
@@ -44,6 +44,14 @@ class ShoppingCartActivity : BaseActivity() {
             calculateTotalMoney()
         }
         totalMoneyView.text = String.format(getString(R.string.total_money), totalMoney)
+        settlementView.setOnClickListener {
+            var checkedData: List<MerchandiseBean> = presenter.mData.filter { it.isChecked && !it.isInvalid }
+            if (checkedData == null || checkedData.isEmpty()) {
+                Toast.makeText(it.context, "请选择商品", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            OrderActivity.startActivity(it.context, totalMoney,checkedData)
+        }
         removeView.setOnClickListener {
             deletable = !deletable
             changeAction()

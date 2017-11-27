@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.qi.market.widget.TitleView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_chevron_left_black_24dp"
+            app:position="left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确认订单"
+            app:position="middle" />
+    </com.qi.market.widget.TitleView>
+
+    <include
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/numView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/merchandiseNum" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/submitOrderView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/colorActuallyPaid"
+            android:paddingLeft="@dimen/btn_submit_horizontal_padding"
+            android:paddingRight="@dimen/btn_submit_horizontal_padding"
+            android:paddingTop="@dimen/btn_submit_vertical_padding"
+            android:paddingBottom="@dimen/btn_submit_vertical_padding"
+            android:text="立即下单"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/actuallyPaidView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/submitOrderView"
+            android:text="@string/actuallyPaid"
+            android:textColor="@color/colorActuallyPaid"/>
+    </RelativeLayout>
+</LinearLayout>

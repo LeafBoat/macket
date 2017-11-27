@@ -31,6 +31,7 @@
         <activity android:name=".module.detail.MerchandiseDetailActivity" />
         <activity android:name=".module.search.SearchActivity" />
         <activity android:name=".module.shoppingcart.activity.ShoppingCartActivity" />
+        <activity android:name=".module.order.activity.OrderActivity" />
         <activity android:name=".module.TestActivity">
 
         </activity>

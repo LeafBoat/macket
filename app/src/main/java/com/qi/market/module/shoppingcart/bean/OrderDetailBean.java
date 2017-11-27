@@ -10,8 +10,6 @@ public class OrderDetailBean {
     private Long num;//数量
     private String producttile;//产品名称
     private double productprice;//产品价格
-    public boolean isChecked;
-    public boolean isInvalid;//商品是否失效
 
     public void setProducttile(String producttile) {
         this.producttile = producttile;

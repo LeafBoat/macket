@@ -39,7 +39,7 @@ class ShoppingCartDao(context: Context) {
         }
     }
 
-    fun delete(id: Int) {
+    fun delete(id: Long) {
         var db = mHelper.writableDatabase
         db.beginTransaction()
         try {

@@ -1,10 +1,12 @@
 package com.qi.market.module.login.presenter
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import com.qi.market.R
+import com.qi.market.common.SharePreferenceHelper
 import com.qi.market.module.login.activity.LoginActivity
 import com.qi.market.module.login.bean.UserBean
 import com.qi.market.module.main.activity.MainActivity
@@ -29,6 +31,8 @@ class LoginPresenter constructor(activity: LoginActivity) {
         RetrofitClient.create(service.login(userBean))
                 .subscribe({ responseBody ->
                     if (responseBody.flag != null && responseBody.flag!!) {
+                        userBean.id = responseBody.id
+                        SharePreferenceHelper.saveUserBean(mActivity,userBean)
                         mActivity.startActivity(Intent(mActivity, MainActivity::class.java))
                         mActivity.finish()
                     } else {
