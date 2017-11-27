@@ -9,8 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/radioButton"
+        <CheckBox
+            android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
@@ -19,12 +19,14 @@
             android:id="@+id/invalidView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="商品失效"
             android:background="#fff"
+            android:gravity="center"
             android:padding="@dimen/activity_horizontal_margin"
-            android:visibility="gone"/>
+            android:text="商品失效"
+            android:visibility="gone" />
     </FrameLayout>
 
-    <include layout="@layout/item_merchandise" />
+    <include
+        android:id="@+id/includeView"
+        layout="@layout/item_merchandise" />
 </LinearLayout>

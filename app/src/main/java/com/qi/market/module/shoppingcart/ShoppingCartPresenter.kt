@@ -17,9 +17,10 @@ class ShoppingCartPresenter(activity: ShoppingCartActivity) {
     private val factory = Executors.defaultThreadFactory()
     fun queryAll(onQueryFinished: (data: List<MerchandiseBean>) -> Unit) {
         factory.newThread {
-            var list = shoppingCartDao.queryAll()
+            mData.clear()
+            mData.addAll(shoppingCartDao.queryAll())
             mActivity.run {
-                onQueryFinished.invoke(list)
+                onQueryFinished.invoke(mData)
             }
         }.start()
     }

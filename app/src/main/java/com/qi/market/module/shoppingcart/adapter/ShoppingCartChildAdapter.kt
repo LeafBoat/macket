@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import com.qi.market.R
 import com.qi.market.module.shoppingcart.bean.OrderDetailBean
@@ -30,8 +30,8 @@ class ShoppingCartChildAdapter(data: List<OrderDetailBean>?) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         var bean = mData!![position]
-        holder?.radioButton?.isChecked = false
-        holder?.radioButton?.setOnCheckedChangeListener { _, isChecked ->
+        holder?.checkbox?.isChecked = false
+        holder?.checkbox?.setOnCheckedChangeListener { _, isChecked ->
             bean.isChecked = isChecked
             onItemCheckedChangeListener?.invoke(isChecked, position)
         }
@@ -41,7 +41,7 @@ class ShoppingCartChildAdapter(data: List<OrderDetailBean>?) : RecyclerView.Adap
                 .centerCrop()
                 .placeholder(R.drawable.merchandise_default)
                 .into(holder?.imageView)*/
-        holder?.radioButton?.isChecked = bean.isChecked
+        holder?.checkbox?.isChecked = bean.isChecked
         holder?.invalidView?.visibility = if (bean.isInvalid) View.VISIBLE else View.GONE
         holder?.brandView?.text = bean.producttile
         holder?.priceView?.text = bean.productprice.toString()
@@ -57,7 +57,7 @@ class ShoppingCartChildAdapter(data: List<OrderDetailBean>?) : RecyclerView.Adap
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val radioButton = itemView.findViewById<RadioButton>(R.id.radioButton)
+        val checkbox = itemView.findViewById<CheckBox>(R.id.checkbox)
         val invalidView = itemView.findViewById<TextView>(R.id.invalidView)
         val imageView = itemView.findViewById<ImageView>(R.id.imageView)
         val brandView = itemView.findViewById<TextView>(R.id.brandView)

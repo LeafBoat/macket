@@ -23,12 +23,16 @@ class ShoppingCartActivity : BaseActivity() {
     private var deletable = false
     lateinit var adapter: ShoppingCartAdapter
     private lateinit var presenter: ShoppingCartPresenter
-
+    private var totalMoney: Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping_cart)
         presenter = ShoppingCartPresenter(this)
         adapter = ShoppingCartAdapter(presenter.mData)
+        adapter.onItemCheckedChangeListener = { _, _ ->
+            //当商品选中状态改变总金额跟着改变
+            calculateTotalMoney()
+        }
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = adapter
@@ -36,8 +40,10 @@ class ShoppingCartActivity : BaseActivity() {
             presenter.mData
                     .takeWhile { !it.isInvalid }
                     .forEach { it.isChecked = isChecked }
+            adapter.notifyDataSetChanged(presenter.mData)
+            calculateTotalMoney()
         }
-        adapter.notifyDataSetChanged(presenter.mData)
+        totalMoneyView.text = String.format(getString(R.string.total_money), totalMoney)
         removeView.setOnClickListener {
             deletable = !deletable
             changeAction()
@@ -45,6 +51,12 @@ class ShoppingCartActivity : BaseActivity() {
         presenter.queryAll {
             adapter.notifyDataSetChanged(it)
         }
+    }
+
+    private fun calculateTotalMoney() {
+        totalMoney = 0.0
+        presenter.mData.filter { !it.isInvalid && it.isChecked }.forEach { totalMoney += it.price * it.num }
+        totalMoneyView.text = String.format(getString(R.string.total_money), totalMoney)
     }
 
     private fun changeAction() = if (deletable) {

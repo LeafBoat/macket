@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
@@ -17,12 +18,8 @@ import com.qi.market.network.glide.GlideApp
  * Detail:
  */
 class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>() {
-    private var mData: List<MerchandiseBean>? = null
+    private var mData: List<MerchandiseBean>? = data
     var onItemCheckedChangeListener: ((isChecked: Boolean, position: Int) -> Unit)? = null
-
-    init {
-        mData = data
-    }
 
     override fun getItemCount(): Int {
         if (mData == null)
@@ -32,8 +29,8 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         var bean = mData!![position]
-        holder?.radioButton?.isChecked = false
-        holder?.radioButton?.setOnCheckedChangeListener { _, isChecked ->
+        holder?.checkbox?.isChecked = false
+        holder?.checkbox?.setOnCheckedChangeListener { _, isChecked ->
             bean.isChecked = isChecked
             onItemCheckedChangeListener?.invoke(isChecked, position)
         }
@@ -43,7 +40,7 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
                 .centerCrop()
                 .placeholder(R.drawable.merchandise_default)
                 .into(holder?.imageView)
-        holder?.radioButton?.isChecked = bean.isChecked
+        holder?.checkbox?.isChecked = bean.isChecked
         holder?.invalidView?.visibility = if (bean.isInvalid) View.VISIBLE else View.GONE
         holder?.brandView?.text = bean.title
         holder?.priceView?.text = bean.price.toString()
@@ -59,15 +56,19 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val radioButton = itemView.findViewById<RadioButton>(R.id.radioButton)
-        val invalidView = itemView.findViewById<TextView>(R.id.invalidView)
-        val imageView = itemView.findViewById<ImageView>(R.id.imageView)
-        val brandView = itemView.findViewById<TextView>(R.id.brandView)
-        val merchandiseNameView = itemView.findViewById<TextView>(R.id.merchandiseNameView)
-        val sellnumsView = itemView.findViewById<TextView>(R.id.sellnumsView)
-        val unitView = itemView.findViewById<TextView>(R.id.unitView)
-        val priceView = itemView.findViewById<TextView>(R.id.priceView)
-        val addView = itemView.findViewById<TextView>(R.id.addView)
+        val checkbox = itemView.findViewById<CheckBox>(R.id.checkbox)!!
+        val invalidView = itemView.findViewById<TextView>(R.id.invalidView)!!
+        val imageView = itemView.findViewById<ImageView>(R.id.imageView)!!
+        val brandView = itemView.findViewById<TextView>(R.id.brandView)!!
+        val merchandiseNameView = itemView.findViewById<TextView>(R.id.merchandiseNameView)!!
+        val sellnumsView = itemView.findViewById<TextView>(R.id.sellnumsView)!!
+        val unitView = itemView.findViewById<TextView>(R.id.unitView)!!
+        val priceView = itemView.findViewById<TextView>(R.id.priceView)!!
+        val addView = itemView.findViewById<TextView>(R.id.addView)!!
+
+        init {
+            itemView.layoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
     }
 
 }
