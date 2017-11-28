@@ -6,10 +6,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
 import com.qi.market.R
-import com.qi.market.widget.DataContainerView.LayoutParams.Type.ERROR
-import com.qi.market.widget.DataContainerView.LayoutParams.Type.PROGRESS
+import com.qi.market.network.retrofit.widget.DataContainerView.LayoutParams.Type.ERROR
+import com.qi.market.network.retrofit.widget.DataContainerView.LayoutParams.Type.PROGRESS
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
@@ -29,6 +28,10 @@ class DataContainerView : LinearLayout {
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         orientation = VERTICAL
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
         if (childCount == 0) {
             //如果没有设置progressBar和errorView,生成默认的View
             progressBar = generateDefaultView(PROGRESS)
@@ -64,6 +67,10 @@ class DataContainerView : LinearLayout {
             }
             if (errorView == null && progressBar == null) {
                 throw Exception("请设置子View的类型")
+            } else if (errorView == null) {
+                errorView = generateDefaultView(ERROR)
+            } else if (progressBar == null) {
+                progressBar = generateDefaultView(PROGRESS)
             }
         } else if (childCount == 3) {
             for (i in 0 until childCount) {
@@ -80,6 +87,7 @@ class DataContainerView : LinearLayout {
         } else {
             throw Exception("子View的数量不能超过三个")
         }
+        showDataView()
     }
 
     /**
@@ -104,7 +112,16 @@ class DataContainerView : LinearLayout {
         super.addView(child, index, params)
     }
 
-    override fun generateLayoutParams(attrs: AttributeSet?): LinearLayout.LayoutParams = LayoutParams(context, attrs)
+    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams = LayoutParams(context, attrs)
+
+    override fun generateDefaultLayoutParams(): LayoutParams? {
+        if (orientation == HORIZONTAL) {
+            return LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        } else if (orientation == VERTICAL) {
+            return LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+        return null
+    }
 
     fun showProgressBar() {
         progressBar?.visibility = View.VISIBLE
@@ -129,7 +146,7 @@ class DataContainerView : LinearLayout {
         @TypeMode
         var type = -1
 
-        constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
             var typedArray = context.obtainStyledAttributes(attrs, R.styleable.DataContainerView)
             type = typedArray.getInt(R.styleable.DataContainerView_type, -1)
         }
