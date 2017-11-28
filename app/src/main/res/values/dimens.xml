@@ -3,6 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!--主页商品类别列表单元格的宽度-->
+    <dimen name="main_merchandise_categories_item_width">90dp</dimen>
+    <!--主页商品类别列表单元格的高度-->
+    <dimen name="main_merchandise_categories_item_height">45dp</dimen>
+    <!--搜索框背景高度-->
+    <dimen name="bg_search_height">40dp</dimen>
+    <!--搜索框背景圆角-->
+    <dimen name="bg_search_radius">20dp</dimen>
+
     <!--商品详情页-->
     <dimen name="merchandise_detail_pic_height">300dp</dimen>
     <dimen name="title_height">48dp</dimen>

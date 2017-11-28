@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.view_title.view.*
  * Created by Qi on 2017/11/15.
  */
 class TitleView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
-    var views = ArrayList<View>()
+    private var views = ArrayList<View>()
 
     init {
         inflate(context, R.layout.view_title, this)
@@ -108,11 +108,5 @@ class TitleView(context: Context, attrs: AttributeSet?) : LinearLayout(context, 
                     .filter { it == R.styleable.TitleView_position }
                     .forEach { position = typedArray.getInt(it, -1) }
         }
-
-        constructor(width: Int, height: Int) : super(width, height)
-        constructor(width: Int, height: Int, weight: Float) : super(width, height, weight)
-        constructor(source: ViewGroup.LayoutParams) : super(source)
-        constructor(source: ViewGroup.MarginLayoutParams) : super(source)
-        constructor(source: LayoutParams) : super(source)
     }
 }

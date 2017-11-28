@@ -1,7 +1,7 @@
 package com.qi.market.module.search
 
 import com.qi.market.module.main.bean.MerchandiseBean
-import com.qi.market.network.RetrofitClient
+import com.qi.market.network.retrofit.RetrofitClient
 
 /**
  * Created by Qi on 2017/11/19.

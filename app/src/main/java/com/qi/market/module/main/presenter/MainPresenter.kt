@@ -5,7 +5,7 @@ import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.main.bean.MerchandiseCategoryBean
 import com.qi.market.module.main.model.MainService
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
-import com.qi.market.network.RetrofitClient
+import com.qi.market.network.retrofit.RetrofitClient
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.concurrent.Executors

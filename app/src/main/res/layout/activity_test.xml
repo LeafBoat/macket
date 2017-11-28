@@ -2,23 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <Button
-        android:id="@+id/insertView"
+        android:id="@+id/showProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="insert" />
+        android:text="progress" />
 
     <Button
-        android:id="@+id/deleteView"
+        android:id="@+id/showError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="delete" />
+        android:text="error" />
 
     <Button
-        android:id="@+id/View"
+        android:id="@+id/showData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="insert" />
+        android:text="data" />
+
+    <com.qi.market.network.retrofit.widget.DataContainerView
+        android:id="@+id/dataContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="hahahaaha"
+            android:textSize="45dp" />
+    </com.qi.market.network.retrofit.widget.DataContainerView>
 </LinearLayout>

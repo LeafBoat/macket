@@ -6,7 +6,7 @@ import com.qi.market.module.order.service.OrderService
 import com.qi.market.module.shoppingcart.bean.OrderBean
 import com.qi.market.module.shoppingcart.bean.OrderDetailBean
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
-import com.qi.market.network.RetrofitClient
+import com.qi.market.network.retrofit.RetrofitClient
 import java.util.concurrent.Executors
 
 /**

@@ -1,9 +1,16 @@
 <resources>
+    <!--TitleView-->
     <declare-styleable name="TitleView">
-        <attr name="position" format="enum" >
+        <attr name="position" format="enum">
             <enum name="left" value="0" />
-            <enum name="middle" value="1"/>
-            <enum name="right" value="2"/>
+            <enum name="middle" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="DataContainerView">
+        <attr name="type" format="enum">
+            <enum name="error" value="0" />
+            <enum name="progress" value="1" />
         </attr>
     </declare-styleable>
 </resources>

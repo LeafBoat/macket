@@ -1,4 +1,4 @@
-package com.qi.market.network
+package com.qi.market.network.retrofit
 
 import okhttp3.Request
 import okhttp3.Response
