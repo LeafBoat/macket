@@ -51,7 +51,7 @@ class MerchandiseDetailActivity : BaseActivity() {
         numView.text = mMerchandiseBean.num.toString()
         incrementView.setOnClickListener {
             mMerchandiseBean.num++
-
+            updateDataBase()
             numView.text = mMerchandiseBean.num.toString()
         }
         if (mMerchandiseBean.num > 0) {
@@ -72,6 +72,8 @@ class MerchandiseDetailActivity : BaseActivity() {
     private fun updateDataBase() {
         executorService.submit {
             dao.update(mMerchandiseBean)
+            var merchandise = dao.query(mMerchandiseBean.id!!)
+            merchandise?.num
         }
     }
 

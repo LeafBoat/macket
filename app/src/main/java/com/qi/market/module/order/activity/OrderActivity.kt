@@ -2,7 +2,6 @@ package com.qi.market.module.order.activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -10,12 +9,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.qi.market.R
 import com.qi.market.base.BaseActivity
-import com.qi.market.common.SharePreferenceHelper
 import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.order.adapter.OrderAdapter
 import com.qi.market.module.order.presenter.OrderPresenter
-import com.qi.market.module.shoppingcart.bean.OrderBean
-import com.qi.market.module.shoppingcart.bean.OrderDetailBean
 import kotlinx.android.synthetic.main.activity_order.*
 
 /**
