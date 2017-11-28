@@ -11,6 +11,7 @@ import com.qi.market.module.detail.adapter.MerchandiseDetailPagerAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
 import kotlinx.android.synthetic.main.activity_merchandise_detail.*
+import java.util.concurrent.Executors
 
 /**
  * Created by Qi on 2017/11/11.
@@ -19,6 +20,7 @@ class MerchandiseDetailActivity : BaseActivity() {
     private lateinit var mMerchandiseBean: MerchandiseBean
     private lateinit var mAdapter: MerchandiseDetailPagerAdapter
     private lateinit var dao: ShoppingCartDao
+    private var executorService = Executors.newCachedThreadPool()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_merchandise_detail)
@@ -30,7 +32,7 @@ class MerchandiseDetailActivity : BaseActivity() {
         viewpager.adapter = mAdapter
         addView.setOnClickListener {
             mMerchandiseBean.num++
-            dao.update(mMerchandiseBean)
+            updateDataBase()
             numView.text = mMerchandiseBean.num.toString()
             addView.visibility = View.GONE
             editNumView.visibility = View.VISIBLE
@@ -39,7 +41,7 @@ class MerchandiseDetailActivity : BaseActivity() {
             if (mMerchandiseBean.num < 1)
                 return@setOnClickListener
             mMerchandiseBean.num--
-            dao.update(mMerchandiseBean)
+            updateDataBase()
             numView.text = mMerchandiseBean.num.toString()
             if (mMerchandiseBean.num == 0) {
                 addView.visibility = View.VISIBLE
@@ -49,7 +51,7 @@ class MerchandiseDetailActivity : BaseActivity() {
         numView.text = mMerchandiseBean.num.toString()
         incrementView.setOnClickListener {
             mMerchandiseBean.num++
-            dao.update(mMerchandiseBean)
+
             numView.text = mMerchandiseBean.num.toString()
         }
         if (mMerchandiseBean.num > 0) {
@@ -66,6 +68,12 @@ class MerchandiseDetailActivity : BaseActivity() {
         mAdapter = MerchandiseDetailPagerAdapter(arrayList)
     }
 
+
+    private fun updateDataBase() {
+        executorService.submit {
+            dao.update(mMerchandiseBean)
+        }
+    }
 
     companion object {
         private val MERCHANDISE = "MERCHANDISE"

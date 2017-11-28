@@ -38,6 +38,11 @@ class MerchandiseFragment : BaseFragment() {
         initList()
     }
 
+    override fun onStart() {
+        super.onStart()
+        refresh(mMerchandiseAdapter!!.mData, mMainActivity.mMerchandiseCategoryId)
+    }
+
     private fun initList() {
         merchandiseList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         merchandiseList.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -47,9 +52,9 @@ class MerchandiseFragment : BaseFragment() {
     }
 
 
-    fun refresh(data: List<MerchandiseBean>, oldId: Long?) {
-        mMainActivity.presenter.changeMerchandiseCheckedNum(data,{
-            if (mMainActivity.mMerchandiseCategoryId!=oldId)
+    fun refresh(data: List<MerchandiseBean>?, oldId: Long?) {
+        mMainActivity.presenter.changeMerchandiseCheckedNum(data, {
+            if (mMainActivity.mMerchandiseCategoryId != oldId)
                 return@changeMerchandiseCheckedNum
             mMerchandiseAdapter!!.notifyDataSetChanged(data)
         })

@@ -49,7 +49,7 @@ class MainPresenter(activity: MainActivity) {
                         mActivity.fragmentShowErrorView()
                     } else {
                         mActivity.fragmentShowContentView()
-                        mActivity.refreshList(list,merchandiseCategoryBean.id)
+                        mActivity.refreshList(list, merchandiseCategoryBean.id)
                     }
                 }, {
                     mActivity.fragmentShowErrorView()
@@ -78,7 +78,8 @@ class MainPresenter(activity: MainActivity) {
     /**
      * 查询数据库，修改商品在购物车的数量
      */
-    fun changeMerchandiseCheckedNum(data: List<MerchandiseBean>,onQueryFinished:()->Unit) {
+    fun changeMerchandiseCheckedNum(data: List<MerchandiseBean>?, onQueryFinished: () -> Unit) {
+        if (data == null) return
         mThreadFactory.newThread {
             for (bean in data) {
                 var query = mDao.query(bean.id!!)
