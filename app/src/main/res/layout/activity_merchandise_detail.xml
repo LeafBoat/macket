@@ -74,6 +74,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/addView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
@@ -81,6 +82,43 @@
                 android:padding="@dimen/activity_horizontal_margin"
                 android:text="加入购物车" />
 
+            <LinearLayout
+                android:id="@+id/editNumView"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right|center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/decrementView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/btn_submit_vertical_padding"
+                    android:paddingLeft="@dimen/btn_submit_horizontal_padding"
+                    android:paddingRight="@dimen/btn_submit_horizontal_padding"
+                    android:paddingTop="@dimen/btn_submit_vertical_padding"
+                    android:text="-" />
+
+                <TextView
+                    android:id="@+id/numView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/incrementView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/btn_submit_vertical_padding"
+                    android:paddingLeft="@dimen/btn_submit_horizontal_padding"
+                    android:paddingRight="@dimen/btn_submit_horizontal_padding"
+                    android:paddingTop="@dimen/btn_submit_vertical_padding"
+                    android:text="+"
+                    android:textColor="@android:color/holo_red_dark" />
+            </LinearLayout>
         </FrameLayout>
 
         <View
@@ -103,7 +141,7 @@
                 android:id="@+id/detailView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
     </LinearLayout>

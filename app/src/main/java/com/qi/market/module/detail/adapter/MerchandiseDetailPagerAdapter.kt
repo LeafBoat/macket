@@ -10,15 +10,15 @@ import com.qi.market.network.glide.GlideApp
 /**
  * Created by Qi on 2017/11/23.
  */
-class MerchandiseDetailPagerAdapter(urls: ArrayList<String>) : PagerAdapter() {
-    private val mData = urls
+class MerchandiseDetailPagerAdapter(urls: ArrayList<String>?) : PagerAdapter() {
+    private var mData = urls
 
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
         var imageView = ImageView(container!!.context)
         GlideApp.with(container!!.context)
-                .load(mData[position])
+                .load(mData!![position])
                 .centerCrop()
-                .placeholder(R.drawable.nongfu)
+                .placeholder(R.drawable.img_default)
                 .into(imageView)
         container.addView(imageView)
         return imageView
@@ -34,10 +34,15 @@ class MerchandiseDetailPagerAdapter(urls: ArrayList<String>) : PagerAdapter() {
     }
 
     override fun getCount(): Int {
-        if (mData == null || mData.isEmpty()) {
+        if (mData == null || mData!!.isEmpty()) {
             return 0
         }
-        return mData.size
+        return mData!!.size
+    }
+
+    fun notifyDataSetChanged(urls: ArrayList<String>?) {
+        mData = urls
+        super.notifyDataSetChanged()
     }
 
 }
