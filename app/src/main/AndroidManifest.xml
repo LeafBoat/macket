@@ -18,7 +18,11 @@
         <activity
             android:name=".module.SplashActivity"
             android:noHistory="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".module.login.activity.LoginActivity"
@@ -29,11 +33,7 @@
         <activity android:name=".module.shoppingcart.activity.ShoppingCartActivity" />
         <activity android:name=".module.order.activity.OrderActivity" />
         <activity android:name=".module.TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

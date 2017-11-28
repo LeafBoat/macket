@@ -37,7 +37,7 @@ class MerchandiseAdapter(data: List<MerchandiseBean>?) : RecyclerView.Adapter<Me
         GlideApp.with(holder?.context)
                 .load(merchandiseBean.picpath)
                 .centerCrop()
-                .placeholder(R.drawable.merchandise_default)
+                .placeholder(R.drawable.img_default)
                 .into(holder!!.imageView)
         holder.brandTV.text = merchandiseBean.title
         holder.priceTV.text = "￥" + merchandiseBean.price

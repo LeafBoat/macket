@@ -19,6 +19,6 @@
     <!--确认订单-->
     <dimen name="btn_submit_vertical_padding">10dp</dimen>
     <dimen name="btn_submit_horizontal_padding">16dp</dimen>
-    <dimen name="img_width">48dp</dimen>
-    <dimen name="img_height">48dp</dimen>
+    <dimen name="img_width">80dp</dimen>
+    <dimen name="img_height">80dp</dimen>
 </resources>

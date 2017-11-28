@@ -16,7 +16,7 @@ class OrderAdapter(urls: Array<String?>?) : RecyclerView.Adapter<OrderAdapter.Vi
         GlideApp.with(holder?.itemView?.context)
                 .load(urls!![position])
                 .centerCrop()
-                .placeholder(R.drawable.merchandise_default)
+                .placeholder(R.drawable.img_default)
                 .into(holder!!.itemView as ImageView)
     }
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import com.qi.market.R
 import com.qi.market.module.main.bean.MerchandiseBean
@@ -29,6 +28,7 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         var bean = mData!![position]
+        holder?.checkbox?.setOnCheckedChangeListener(null)
         holder?.checkbox?.isChecked = false
         holder?.checkbox?.setOnCheckedChangeListener { _, isChecked ->
             bean.isChecked = isChecked
@@ -38,7 +38,7 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
         GlideApp.with(holder?.imageView)
                 .load(bean.picpath)
                 .centerCrop()
-                .placeholder(R.drawable.merchandise_default)
+                .placeholder(R.drawable.img_default)
                 .into(holder?.imageView)
         holder?.checkbox?.isChecked = bean.isChecked
         holder?.invalidView?.visibility = if (bean.isInvalid) View.VISIBLE else View.GONE

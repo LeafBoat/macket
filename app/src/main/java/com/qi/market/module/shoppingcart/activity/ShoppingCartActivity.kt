@@ -24,6 +24,11 @@ class ShoppingCartActivity : BaseActivity() {
     lateinit var adapter: ShoppingCartAdapter
     private lateinit var presenter: ShoppingCartPresenter
     private var totalMoney: Double = 0.0
+    /**
+     * 是否可以更新集合中所有的数据的选中状态
+     */
+    private var isUpdeteAllDataSelectedState = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping_cart)
@@ -31,15 +36,22 @@ class ShoppingCartActivity : BaseActivity() {
         adapter = ShoppingCartAdapter(presenter.mData)
         adapter.onItemCheckedChangeListener = { _, _ ->
             //当商品选中状态改变总金额跟着改变
+            val validNum = presenter.mData.count { !it.isInvalid }
+            val checkedValidNum = presenter.mData.count { !it.isInvalid && it.isChecked }
+            isUpdeteAllDataSelectedState = false
+            checkAllView.isChecked = validNum == checkedValidNum
+            isUpdeteAllDataSelectedState = true
             calculateTotalMoney()
         }
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = adapter
         checkAllView.setOnCheckedChangeListener { _, isChecked ->
-            presenter.mData
-                    .takeWhile { !it.isInvalid }
-                    .forEach { it.isChecked = isChecked }
+            if (isUpdeteAllDataSelectedState) {
+                presenter.mData
+                        .takeWhile { !it.isInvalid }
+                        .forEach { it.isChecked = isChecked }
+            }
             adapter.notifyDataSetChanged(presenter.mData)
             calculateTotalMoney()
         }
@@ -50,7 +62,7 @@ class ShoppingCartActivity : BaseActivity() {
                 Toast.makeText(it.context, "请选择商品", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            OrderActivity.startActivity(it.context, totalMoney,checkedData)
+            OrderActivity.startActivity(it.context, totalMoney, checkedData)
         }
         removeView.setOnClickListener {
             deletable = !deletable
