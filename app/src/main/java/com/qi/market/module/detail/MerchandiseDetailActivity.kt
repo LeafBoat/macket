@@ -71,7 +71,11 @@ class MerchandiseDetailActivity : BaseActivity() {
 
     private fun updateDataBase() {
         executorService.submit {
-            dao.update(mMerchandiseBean)
+            if (mMerchandiseBean.num < 1) {
+                dao.delete(mMerchandiseBean.id!!)
+            } else {
+                dao.update(mMerchandiseBean)
+            }
             var merchandise = dao.query(mMerchandiseBean.id!!)
             merchandise?.num
         }

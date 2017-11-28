@@ -52,6 +52,22 @@ class ShoppingCartDao(context: Context) {
         }
     }
 
+    fun delete(list:List<MerchandiseBean>){
+        var db = mHelper.writableDatabase
+        db.beginTransaction()
+        try {
+            for (bean in list){
+                db.delete(DB_NAME, "id=?", arrayOf(bean.id.toString()))
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
+        }
+
+    }
+
     fun update(merchandiseBean: MerchandiseBean) {
         val db = mHelper.writableDatabase
         db.beginTransaction()

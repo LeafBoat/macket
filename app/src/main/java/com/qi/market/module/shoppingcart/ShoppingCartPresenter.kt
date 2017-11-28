@@ -24,4 +24,22 @@ class ShoppingCartPresenter(activity: ShoppingCartActivity) {
             }
         }.start()
     }
+
+    fun delete(merchandiseBean: MerchandiseBean) {
+        factory.newThread {
+            shoppingCartDao.delete(merchandiseBean.id!!)
+        }.start()
+    }
+
+    fun delete(list: List<MerchandiseBean>) {
+        factory.newThread {
+            shoppingCartDao.delete(list)
+        }.start()
+    }
+
+    fun update(merchandiseBean: MerchandiseBean) {
+        factory.newThread {
+            shoppingCartDao.update(merchandiseBean)
+        }.start()
+    }
 }

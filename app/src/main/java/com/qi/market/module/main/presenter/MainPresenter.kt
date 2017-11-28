@@ -91,6 +91,12 @@ class MainPresenter(activity: MainActivity) {
             })
         }.start()
     }
+
+    fun delete(merchandiseBean: MerchandiseBean) {
+        mThreadFactory.newThread {
+            mDao.delete(merchandiseBean.id!!)
+        }.start()
+    }
 }
 
 

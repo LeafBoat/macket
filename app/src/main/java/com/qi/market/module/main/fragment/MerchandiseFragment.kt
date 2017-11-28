@@ -32,7 +32,11 @@ class MerchandiseFragment : BaseFragment() {
         mMainActivity = activity as MainActivity
         mMerchandiseAdapter = MerchandiseAdapter(null)
         mMerchandiseAdapter!!.onMerchandiseNumChangeListener = { merchandiseBean, _ ->
-            mMainActivity.presenter.updateShoppingCart(merchandiseBean)
+            if (merchandiseBean.num < 1) {
+                mMainActivity.presenter.delete(merchandiseBean)
+            } else {
+                mMainActivity.presenter.updateShoppingCart(merchandiseBean)
+            }
         }
         mMerchandiseAdapter = mMerchandiseAdapter
         initList()
