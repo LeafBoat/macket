@@ -35,15 +35,22 @@ class ShoppingCartActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping_cart)
         presenter = ShoppingCartPresenter(this)
-        adapter = ShoppingCartAdapter(presenter.mData)
+        adapter = ShoppingCartAdapter(presenter.mData, deletable)
         adapter.onItemCheckedChangeListener = { _, _ ->
-            //当商品选中状态改变总金额跟着改变
-            val validNum = presenter.mData.count { !it.isInvalid }
-            val checkedValidNum = presenter.mData.count { !it.isInvalid && it.isChecked }
-            isUpdateAllDataSelectedState = false
-            checkAllView.isChecked = validNum == checkedValidNum
-            isUpdateAllDataSelectedState = true
-            calculateTotalMoney()
+            if (deletable) {
+                val checkedNum = presenter.mData.count { it.isChecked }
+                isUpdateAllDataSelectedState = false
+                checkAllView.isChecked = checkedNum == presenter.mData.size
+                isUpdateAllDataSelectedState = true
+            } else {
+                //当商品选中状态改变总金额跟着改变
+                val validNum = presenter.mData.count { !it.isInvalid }
+                val checkedValidNum = presenter.mData.count { !it.isInvalid && it.isChecked }
+                isUpdateAllDataSelectedState = false
+                checkAllView.isChecked = validNum == checkedValidNum
+                isUpdateAllDataSelectedState = true
+                calculateTotalMoney()
+            }
         }
         adapter.onNumChangedListener = { merchandiseBean, _ ->
             val validNum = presenter.mData.count { !it.isInvalid }
@@ -60,6 +67,7 @@ class ShoppingCartActivity : BaseActivity() {
         }
         editView.setOnClickListener {
             deletable = !deletable
+            editView.text = if (deletable) "完成" else "编辑"
             changeAction()
         }
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -68,10 +76,10 @@ class ShoppingCartActivity : BaseActivity() {
         checkAllView.setOnCheckedChangeListener { _, isChecked ->
             if (isUpdateAllDataSelectedState) {
                 presenter.mData
-                        .takeWhile { !it.isInvalid }
+                        .takeWhile { if (deletable) true else !it.isInvalid }
                         .forEach { it.isChecked = isChecked }
             }
-            adapter.notifyDataSetChanged(presenter.mData)
+            adapter.notifyDataSetChanged(presenter.mData, deletable)
             calculateTotalMoney()
         }
         totalMoneyView.text = String.format(getString(R.string.total_money), totalMoney)
@@ -87,10 +95,10 @@ class ShoppingCartActivity : BaseActivity() {
             val checkedData = presenter.mData.filter { it.isChecked }
             presenter.mData.removeAll(checkedData)
             presenter.delete(checkedData)
-            adapter.notifyDataSetChanged(presenter.mData)
+            adapter.notifyDataSetChanged(presenter.mData, deletable)
         }
         presenter.queryAll {
-            adapter.notifyDataSetChanged(it)
+            adapter.notifyDataSetChanged(it, deletable)
         }
     }
 

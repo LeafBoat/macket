@@ -16,8 +16,9 @@ import com.qi.market.network.glide.GlideApp
  * Date:2017/11/27 16:36
  * Detail:
  */
-class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>() {
+class ShoppingCartAdapter(data: List<MerchandiseBean>, deletable: Boolean) : RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>() {
     private var mData: List<MerchandiseBean>? = data
+    private var deletable: Boolean = deletable
     var onItemCheckedChangeListener: ((isChecked: Boolean, position: Int) -> Unit)? = null
     var onNumChangedListener: ((merchandiseBean: MerchandiseBean, position: Int) -> Unit)? = null
     override fun getItemCount(): Int {
@@ -28,13 +29,23 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         var bean = mData!![position]
-        holder?.checkbox?.setOnCheckedChangeListener(null)
-        holder?.checkbox?.isChecked = false
-        holder!!.subtractView.visibility = View.GONE
+        holder!!.checkbox.visibility = View.VISIBLE
+        holder.checkbox.setOnCheckedChangeListener(null)
+        holder.checkbox.isChecked = false
+        holder.invalidView.visibility = View.VISIBLE
+        holder.subtractView.visibility = View.GONE
         holder.subtractView.setOnLongClickListener(null)
         holder.numView.visibility = View.GONE
         holder.numView.text = "0"
         holder.addView.setOnClickListener(null)
+        if (deletable) {
+            holder.invalidView.visibility = View.GONE
+        } else {
+            if (bean.isInvalid)
+                holder.checkbox.visibility = View.GONE
+            else
+                holder.invalidView.visibility = View.GONE
+        }
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
             bean.isChecked = isChecked
             onItemCheckedChangeListener?.invoke(isChecked, position)
@@ -61,7 +72,6 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
             if (onNumChangedListener != null)
                 onNumChangedListener!!(bean, position)
         }
-        holder.invalidView.visibility = View.GONE
         GlideApp.with(holder.imageView)
                 .load(bean.picpath)
                 .centerCrop()
@@ -81,8 +91,9 @@ class ShoppingCartAdapter(data: List<MerchandiseBean>) : RecyclerView.Adapter<Sh
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_shopping_cart_adapter, null))
 
-    fun notifyDataSetChanged(data: List<MerchandiseBean>?) {
+    fun notifyDataSetChanged(data: List<MerchandiseBean>?, deletable: Boolean) {
         mData = data
+        this.deletable = deletable
         notifyDataSetChanged()
     }
 
