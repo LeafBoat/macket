@@ -11,6 +11,13 @@ import android.view.ViewGroup
  * Created by Qi on 2017/11/9.
  */
 open class BaseFragment : Fragment() {
+    var onAttachListener: (() -> Unit)? = null
+    var onCreateListener: (() -> Unit)? = null
+    var onCreateViewListener: (() -> Unit)? = null
+    var onViewCreatedListener: (() -> Unit)? = null
+    var onActivityCreatedListener: (() -> Unit)? = null
+    var onStartListener: (() -> Unit)? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (this.onAttachListener != null) {
@@ -53,34 +60,5 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    private var onAttachListener: (() -> Unit)? = null
-    private var onCreateListener: (() -> Unit)? = null
-    private var onCreateViewListener: (() -> Unit)? = null
-    private var onViewCreatedListener: (() -> Unit)? = null
-    private var onActivityCreatedListener: (() -> Unit)? = null
-    private var onStartListener: (() -> Unit)? = null
 
-    fun setOnAttachListener(onAttachListener: (() -> Unit)?) {
-        this.onAttachListener = onAttachListener
-    }
-
-    fun setOnCreateListener(onCreateListener: (() -> Unit)?) {
-        this.onCreateListener = onCreateListener
-    }
-
-    fun setOnCreateViewListener(onCreateViewListener: (() -> Unit)?) {
-        this.onCreateViewListener = onCreateViewListener
-    }
-
-    fun setOnViewCreatedListener(onViewCreatedListener: (() -> Unit)?) {
-        this.onViewCreatedListener = onViewCreatedListener
-    }
-
-    fun setOnActivityCreatedListener(onActivityCreatedListener: (() -> Unit)?) {
-        this.onActivityCreatedListener = onActivityCreatedListener
-    }
-
-    fun setOnStartListener(onStartListener: (() -> Unit)?) {
-        this.onStartListener = onStartListener
-    }
 }

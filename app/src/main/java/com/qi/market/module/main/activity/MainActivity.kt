@@ -36,17 +36,13 @@ class MainActivity : BaseActivity() {
             ShoppingCartActivity.startActivity(it.context)
         }
         setMenu()
-        setList()
     }
 
     /**
      * 设置商品列表
      */
-    private fun setList() {
-        var fragment = MerchandiseFragment()
-        fragment.onFragmentInitListener = {
-            presenter.merchandiseCategory()
-        }
+    fun setList() {
+        val fragment = MerchandiseFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment, MERCHANDISE_FRAGMENT).commit()
     }
 
@@ -69,9 +65,11 @@ class MainActivity : BaseActivity() {
         mMenuAdapter = MerchandiseMenuAdapter(null)
         mMenuAdapter!!.mOnItemClickListener = { merchandiseCategoryBean, _ ->
             mMerchandiseCategoryId = merchandiseCategoryBean.id!!
-            presenter.merchandiseList(merchandiseCategoryBean)
+            presenter.currentCategory = merchandiseCategoryBean
+            presenter.merchandiseList()
         }
         list.adapter = mMenuAdapter
+        presenter.merchandiseCategory()
     }
 
     /**

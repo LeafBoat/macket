@@ -11,6 +11,8 @@ import com.qi.market.base.BaseFragment
 import com.qi.market.module.main.activity.MainActivity
 import com.qi.market.module.main.adapter.MerchandiseAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
+import com.qi.market.module.main.bean.MerchandiseCategoryBean
+import com.qi.market.module.main.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_merchandise.*
 
 /**
@@ -21,15 +23,15 @@ class MerchandiseFragment : BaseFragment() {
 
     private var mMerchandiseAdapter: MerchandiseAdapter? = null
 
-    var onFragmentInitListener: (() -> Unit)? = null
-
     private lateinit var mMainActivity: MainActivity
+
+    private lateinit var presenter: MainPresenter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) = inflater?.inflate(R.layout.fragment_merchandise, null)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         mMainActivity = activity as MainActivity
+        presenter = mMainActivity.presenter
         mMerchandiseAdapter = MerchandiseAdapter(null)
         mMerchandiseAdapter!!.onMerchandiseNumChangeListener = { merchandiseBean, _ ->
             if (merchandiseBean.num < 1) {
@@ -39,20 +41,15 @@ class MerchandiseFragment : BaseFragment() {
             }
         }
         mMerchandiseAdapter = mMerchandiseAdapter
-        initList()
+        merchandiseList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        merchandiseList.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        merchandiseList.adapter = mMerchandiseAdapter
+        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onStart() {
         super.onStart()
-        refresh(mMerchandiseAdapter!!.mData, mMainActivity.mMerchandiseCategoryId)
-    }
-
-    private fun initList() {
-        merchandiseList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        merchandiseList.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        merchandiseList.adapter = mMerchandiseAdapter
-        if (onFragmentInitListener != null)
-            onFragmentInitListener!!()
+        presenter.merchandiseList()
     }
 
 

@@ -14,7 +14,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
-            android:button="@null"
+            android:button="@android:color/transparent"
             android:background="@drawable/bg_checkbox"
             android:gravity="center" />
 

@@ -84,13 +84,8 @@ class ShoppingCartActivity : BaseActivity() {
             OrderActivity.startActivity(it.context, totalMoney, checkedData)
         }
         removeView.setOnClickListener {
-            val checkedData = ArrayList<MerchandiseBean>()
-            for (bean in presenter.mData) {
-                if (bean.isChecked) {
-                    checkedData.add(bean)
-                    presenter.mData.remove(bean)
-                }
-            }
+            val checkedData = presenter.mData.filter { it.isChecked }
+            presenter.mData.removeAll(checkedData)
             presenter.delete(checkedData)
             adapter.notifyDataSetChanged(presenter.mData)
         }

@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape
-            android:shape="rectangle"
-            android:visible="true">
-            <solid android:color="@android:color/transparent" />
-        </shape>
-    </item>
+    <item android:drawable="@android:color/transparent" />
     <item
-        android:width="16dp"
-        android:height="16dp"
+        android:bottom="16dp"
         android:drawable="@drawable/ic_checkbox"
-        android:gravity="center" />
+        android:left="16dp"
+        android:right="16dp"
+        android:top="16dp" />
 </layer-list>
