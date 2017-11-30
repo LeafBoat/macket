@@ -12,6 +12,7 @@ import com.qi.market.common.db.annotation.QUERY;
 import com.qi.market.common.db.annotation.UPDATE;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -98,22 +99,27 @@ public final class SQLiteDao {
                         try {
                             database.beginTransaction();
                             CursorConverter<T> tCursorConverter = new CursorConverter<>();
-                            Cursor cursor = null;
+                            List<Cursor> cursors = new ArrayList<>();
                             if (args == null || args.length == 0) {
                                 String sql = "select * from " + dbName;
-                                cursor = database.rawQuery(sql, null);
-
+                                cursors.add(database.rawQuery(sql, null));
                             } else if (args.length == 1) {
-                                Object arg = args[0];
                                 Annotation[][] parameterAnnotations = method.getParameterAnnotations();
                                 if (parameterAnnotations == null)
                                     throw new Exception("查询方法需要添加注解Condition");
                                 if (parameterAnnotations.length > 1 || parameterAnnotations[0].length > 1)
                                     throw new Exception("查询参数注解的个数超过限定个数1");
                                 Annotation annotation = parameterAnnotations[0][0];
+                                Object arg = args[0];
                                 if (annotation instanceof Condition) {
                                     String sql = "select * from " + dbName + " where " + ((Condition) annotation).value() + "=?";
-                                    cursor = database.rawQuery(sql, new String[]{String.valueOf(arg)});
+                                    if (arg.getClass().isArray()) {
+                                        for (Object object : (Object[]) arg){
+                                            cursors.add(database.rawQuery(sql, new String[]{String.valueOf(object)}));
+                                        }
+                                    }else {
+                                        cursors.add(database.rawQuery(sql, new String[]{String.valueOf(arg)}));
+                                    }
                                 } else
                                     throw new Exception("查询参数的注解类型错误");
                             } else {
@@ -127,12 +133,14 @@ public final class SQLiteDao {
                             Type finalType = getGenericType(genericType);
                             Class<T> clazz = (Class) finalType;
                             List<T> data = new ArrayList<T>();
-                            while (cursor.moveToNext()) {
-                                T obj = clazz.newInstance();
-                                obj = tCursorConverter.converter(cursor, obj);
-                                data.add(obj);
+                            for (Cursor cursor : cursors){
+                                while (cursor.moveToNext()) {
+                                    T obj = clazz.newInstance();
+                                    obj = tCursorConverter.converter(cursor, obj);
+                                    data.add(obj);
+                                }
+                                cursor.close();
                             }
-                            cursor.close();
                             subscriber.onNext(data);
                             database.setTransactionSuccessful();
                         } catch (Exception e) {

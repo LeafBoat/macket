@@ -70,28 +70,4 @@ class OrderSQLiteModel(context: Context) {
         }
     }
 
-    fun query(productid: Int): OrderDetailBean? {
-        val db = mHelper.writableDatabase
-        db.beginTransaction()
-        var orderDetailBean: OrderDetailBean? = null
-        try {
-            val sql = "select * from $DB_NAME where productid=?"
-            var cursor = db.rawQuery(sql, arrayOf(productid.toString()))
-            if (cursor.moveToNext()) {
-                orderDetailBean = OrderDetailBean()
-                orderDetailBean.productid = productid.toLong()
-                orderDetailBean.userid = cursor.getLong(cursor.getColumnIndex("userid"))
-                orderDetailBean.producttile = cursor.getString(cursor.getColumnIndex("producttile"))
-                orderDetailBean.num = cursor.getInt(cursor.getColumnIndex("num")).toLong()
-                orderDetailBean.productprice = cursor.getDouble(cursor.getColumnIndex("productprice"))
-            }
-            db.setTransactionSuccessful()
-            return orderDetailBean
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return orderDetailBean
-        } finally {
-            db.endTransaction()
-        }
-    }
 }

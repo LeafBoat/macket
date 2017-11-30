@@ -68,21 +68,10 @@ class MainPresenter(activity: MainActivity) {
      * 更新数据库数据
      */
     fun updateShoppingCart(merchandiseBean: MerchandiseBean) {
-        /* mThreadFactory.newThread {
-             var bean = mDao.query(merchandiseBean.id!!)
-             if (bean == null) {
-                 var list = ArrayList<MerchandiseBean>()
-                 list.add(merchandiseBean)
-                 mDao.insert(list)
-             } else {
-                 mDao.update(merchandiseBean)
-             }
-             mActivity.runOnUiThread { }
-         }.start()*/
         var service = dao1.create(MerchandiseService::class.java)
         service.query(merchandiseBean.id!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (it.size == 0) {
+                    if (it.isEmpty()) {
                         var list = ArrayList<MerchandiseBean>()
                         list.add(merchandiseBean)
                         mDao.insert(list)
@@ -99,25 +88,14 @@ class MainPresenter(activity: MainActivity) {
      */
     fun changeMerchandiseCheckedNum(data: List<MerchandiseBean>?, onQueryFinished: () -> Unit) {
         if (data == null) return
-        /*mThreadFactory.newThread {
-            for (bean in data) {
-                var query = mDao.query(bean.id!!)
-                if (query != null)
-                    bean.num = query.num
-            }
-            mActivity.runOnUiThread({
-                onQueryFinished.invoke()
-            })
-        }.start()*/
-
         var service = dao1.create(MerchandiseService::class.java)
         for (bean in data) {
             service.query(bean.id!!).observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        if (it.isEmpty())
-                            return@subscribe
-                        var merchandiseBean = it[0]
-                        bean.num = merchandiseBean.num
+                        if (!it.isEmpty()) {
+                            var merchandiseBean = it[0]
+                            bean.num = merchandiseBean.num
+                        }
                         onQueryFinished.invoke()
                     }, {}, {})
         }

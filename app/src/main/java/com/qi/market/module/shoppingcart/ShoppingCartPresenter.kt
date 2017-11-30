@@ -1,9 +1,15 @@
 package com.qi.market.module.shoppingcart
 
+import com.qi.market.common.Constant
+import com.qi.market.common.db.main.SQLiteDao
 import com.qi.market.module.main.bean.MerchandiseBean
+import com.qi.market.module.main.db.service.MerchandiseService
 import com.qi.market.module.shoppingcart.activity.ShoppingCartActivity
 import com.qi.market.module.shoppingcart.bean.OrderBean
+import com.qi.market.module.shoppingcart.db.ShoppingCartSQLiteOpenHelper
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -12,17 +18,20 @@ import java.util.concurrent.Executors
  */
 class ShoppingCartPresenter(activity: ShoppingCartActivity) {
     val mData = ArrayList<MerchandiseBean>()
-    private val mActivity = activity
+    private val activity = activity
     private var shoppingCartDao: ShoppingCartDao = ShoppingCartDao(activity)
+    private val sqLiteDao = SQLiteDao.Builder().setSQLiteOpenHelper(ShoppingCartSQLiteOpenHelper(activity)).build()
     private val factory = Executors.defaultThreadFactory()
     fun queryAll(onQueryFinished: (data: List<MerchandiseBean>) -> Unit) {
-        factory.newThread {
-            mData.clear()
-            mData.addAll(shoppingCartDao.queryAll())
-            mActivity.run {
-                onQueryFinished.invoke(mData)
-            }
-        }.start()
+        mData.clear()
+        sqLiteDao.create(MerchandiseService::class.java).query().observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    for (bean in it){
+                        bean.picpath = Constant.BASE_URL+bean.picpath
+                    }
+                    mData.addAll(it)
+                    onQueryFinished.invoke(mData)
+                }, {}, {})
     }
 
     fun delete(merchandiseBean: MerchandiseBean) {

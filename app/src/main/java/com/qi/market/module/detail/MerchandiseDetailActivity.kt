@@ -7,10 +7,17 @@ import android.view.View
 import com.google.gson.Gson
 import com.qi.market.R
 import com.qi.market.base.BaseActivity
+import com.qi.market.common.SharePreferenceHelper
+import com.qi.market.common.db.main.SQLiteDao
 import com.qi.market.module.detail.adapter.MerchandiseDetailPagerAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
+import com.qi.market.module.main.db.service.MerchandiseService
+import com.qi.market.module.shoppingcart.db.ShoppingCartSQLiteOpenHelper
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
 import kotlinx.android.synthetic.main.activity_merchandise_detail.*
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.Executors
 
 /**
@@ -21,6 +28,7 @@ class MerchandiseDetailActivity : BaseActivity() {
     private lateinit var mAdapter: MerchandiseDetailPagerAdapter
     private lateinit var dao: ShoppingCartDao
     private var executorService = Executors.newCachedThreadPool()
+    val sqLiteDao = SQLiteDao.Builder().setSQLiteOpenHelper(ShoppingCartSQLiteOpenHelper(this)).build()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_merchandise_detail)
@@ -76,8 +84,6 @@ class MerchandiseDetailActivity : BaseActivity() {
             } else {
                 dao.update(mMerchandiseBean)
             }
-            var merchandise = dao.query(mMerchandiseBean.id!!)
-            merchandise?.num
         }
     }
 

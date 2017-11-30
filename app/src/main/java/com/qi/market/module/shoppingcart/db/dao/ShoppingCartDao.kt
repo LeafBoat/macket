@@ -28,7 +28,7 @@ class ShoppingCartDao(context: Context) {
                 values.put("description", bean.description)
                 values.put("price", bean.price)
                 values.put("num", bean.num)
-                values.put("picpath", bean.picpath)
+                values.put("picpath", bean.picpath.substring(Constant.BASE_URL.length))
                 db.insert(DB_NAME, null, values)
             }
             db.setTransactionSuccessful()
@@ -88,63 +88,4 @@ class ShoppingCartDao(context: Context) {
         }
     }
 
-    fun query(id: Long): MerchandiseBean? {
-        val db = mHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            val sql = "select * from $DB_NAME where id=?"
-            var cursor = db.rawQuery(sql, arrayOf(id.toString()))
-            var merchandiseBean: MerchandiseBean? = null
-            if (cursor.moveToNext()) {
-                merchandiseBean = MerchandiseBean()
-                merchandiseBean.id = cursor.getInt(cursor.getColumnIndex("id")).toLong()
-                merchandiseBean.typeid = cursor.getInt(cursor.getColumnIndex("typeid")).toLong()
-                merchandiseBean.title = cursor.getString(cursor.getColumnIndex("title"))
-                merchandiseBean.description = cursor.getString(cursor.getColumnIndex("description"))
-                merchandiseBean.price = cursor.getDouble(cursor.getColumnIndex("price"))
-                merchandiseBean.num = cursor.getInt(cursor.getColumnIndex("num"))
-                var picpath = cursor.getString(cursor.getColumnIndex("picpath"))
-                if (!picpath.isNullOrEmpty())
-                    picpath = Constant.BASE_URL + picpath
-                merchandiseBean.picpath = picpath
-            }
-            db.setTransactionSuccessful()
-            return merchandiseBean
-        } catch (e: Exception) {
-            throw e
-        } finally {
-            db.endTransaction()
-        }
-    }
-
-    fun queryAll(): List<MerchandiseBean> {
-        val db = mHelper.writableDatabase
-        db.beginTransaction()
-        var list = ArrayList<MerchandiseBean>()
-        try {
-            val sql = "select * from $DB_NAME"
-            var cursor = db.rawQuery(sql, null)
-            while (cursor.moveToNext()) {
-                var merchandiseBean = MerchandiseBean()
-                merchandiseBean.id = cursor.getInt(cursor.getColumnIndex("id")).toLong()
-                merchandiseBean.typeid = cursor.getInt(cursor.getColumnIndex("typeid")).toLong()
-                merchandiseBean.title = cursor.getString(cursor.getColumnIndex("title"))
-                merchandiseBean.description = cursor.getString(cursor.getColumnIndex("description"))
-                merchandiseBean.price = cursor.getDouble(cursor.getColumnIndex("price"))
-                merchandiseBean.num = cursor.getInt(cursor.getColumnIndex("num"))
-                var picpath = cursor.getString(cursor.getColumnIndex("picpath"))
-                if (!picpath.isNullOrEmpty())
-                    picpath = Constant.BASE_URL + picpath
-                merchandiseBean.picpath = picpath
-                list.add(merchandiseBean)
-            }
-            db.setTransactionSuccessful()
-            return list
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return list
-        } finally {
-            db.endTransaction()
-        }
-    }
 }
