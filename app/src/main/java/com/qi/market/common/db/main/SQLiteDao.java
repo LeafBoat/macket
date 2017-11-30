@@ -4,7 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.google.gson.Gson;
+import com.qi.market.common.db.CursorConverter;
+import com.qi.market.common.db.annotation.Condition;
 import com.qi.market.common.db.annotation.DELETE;
 import com.qi.market.common.db.annotation.INSERT;
 import com.qi.market.common.db.annotation.QUERY;
@@ -18,6 +19,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,8 +43,9 @@ public final class SQLiteDao {
     public static class Builder {
         private SQLiteOpenHelper sqliteOpenHelper = null;
 
-        public void setSQLiteOpenHelper(SQLiteOpenHelper openHelper) {
+        public Builder setSQLiteOpenHelper(SQLiteOpenHelper openHelper) {
             this.sqliteOpenHelper = openHelper;
+            return this;
         }
 
         public SQLiteDao build() {
@@ -60,7 +63,7 @@ public final class SQLiteDao {
                     return null;
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof QUERY) {
-                        query(method, args);
+                        return query(method, args);
                     } else if (annotation instanceof UPDATE)
                         update(method, args);
                     else if (annotation instanceof INSERT)
@@ -81,46 +84,75 @@ public final class SQLiteDao {
 
     }
 
-    private <T> Observable<List<T>> query(Method method, final Object[] args) {
+    private <T> Observable<List<T>> query(final Method method, final Object[] args) {
         QUERY query = method.getAnnotation(QUERY.class);
         final String dbName = query.value();
         final SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
-        Observable.OnSubscribe<T> onSubscribe = new Observable.OnSubscribe<T>() {
+        Observable.OnSubscribe<List<T>> onSubscribe = new Observable.OnSubscribe<List<T>>() {
 
             @Override
-            public void call(Subscriber<? super T> subscriber) {
+            public void call(final Subscriber<? super List<T>> subscriber) {
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        database.beginTransaction();
-                        List<T> data = new ArrayList<>();
-                        ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
-                        Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
                         try {
+                            database.beginTransaction();
+                            CursorConverter<T> tCursorConverter = new CursorConverter<>();
+                            Cursor cursor = null;
                             if (args == null || args.length == 0) {
                                 String sql = "select * from " + dbName;
-                                Cursor cursor = database.rawQuery(sql, null);
-                                while (cursor.moveToNext()) {
-                                    T obj = clazz.newInstance();
-                                    int columnCount = cursor.getColumnCount();
-                                    for (int i = 0; i < columnCount; i++) {
-                                        cursor
-                                    }
-                                }
+                                cursor = database.rawQuery(sql, null);
+
+                            } else if (args.length == 1) {
+                                Object arg = args[0];
+                                Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+                                if (parameterAnnotations == null)
+                                    throw new Exception("查询方法需要添加注解Condition");
+                                if (parameterAnnotations.length > 1 || parameterAnnotations[0].length > 1)
+                                    throw new Exception("查询参数注解的个数超过限定个数1");
+                                Annotation annotation = parameterAnnotations[0][0];
+                                if (annotation instanceof Condition) {
+                                    String sql = "select * from " + dbName + " where " + ((Condition) annotation).value() + "=?";
+                                    cursor = database.rawQuery(sql, new String[]{String.valueOf(arg)});
+                                } else
+                                    throw new Exception("查询参数的注解类型错误");
                             } else {
-                                String sql = "select * from " + dbName + "where";
+                                throw new Exception("参数个数错误");
                             }
+                            //获取返回类型
+                            Type returnType = method.getGenericReturnType();
+                            //如果返回类型带有泛型，获取泛型类型
+                            Type genericType = getGenericType(returnType);
+                            //获取第二层泛型类型
+                            Type finalType = getGenericType(genericType);
+                            Class<T> clazz = (Class) finalType;
+                            List<T> data = new ArrayList<T>();
+                            while (cursor.moveToNext()) {
+                                T obj = clazz.newInstance();
+                                obj = tCursorConverter.converter(cursor, obj);
+                                data.add(obj);
+                            }
+                            cursor.close();
+                            subscriber.onNext(data);
                             database.setTransactionSuccessful();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            subscriber.onError(e);
                         } finally {
                             database.endTransaction();
+                            subscriber.onCompleted();
                         }
                     }
                 });
             }
         };
         return Observable.create(onSubscribe);
+    }
+
+    private Type getGenericType(Type type) {
+        if (type instanceof ParameterizedType) {
+            return ((ParameterizedType) type).getActualTypeArguments()[0];
+        }
+        return null;
     }
 
     private void update(Method method, Object[] args) {

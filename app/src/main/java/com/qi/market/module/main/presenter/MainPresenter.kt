@@ -1,9 +1,12 @@
 package com.qi.market.module.main.presenter
 
+import com.qi.market.common.db.main.SQLiteDao
 import com.qi.market.module.main.activity.MainActivity
 import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.main.bean.MerchandiseCategoryBean
+import com.qi.market.module.main.db.service.MerchandiseService
 import com.qi.market.module.main.model.MainService
+import com.qi.market.module.shoppingcart.db.ShoppingCartSQLiteOpenHelper
 import com.qi.market.module.shoppingcart.db.dao.ShoppingCartDao
 import com.qi.market.network.retrofit.RetrofitClient
 import rx.android.schedulers.AndroidSchedulers
@@ -18,6 +21,7 @@ class MainPresenter(activity: MainActivity) {
     private val mActivity = activity
     private var service = RetrofitClient.create(MainService::class.java)
     private val mDao = ShoppingCartDao(mActivity)
+    val dao1 = SQLiteDao.Builder().setSQLiteOpenHelper(ShoppingCartSQLiteOpenHelper(activity)).build()
     private var mThreadFactory = Executors.defaultThreadFactory()!!
     var currentCategory: MerchandiseCategoryBean? = null
     /**
@@ -64,17 +68,30 @@ class MainPresenter(activity: MainActivity) {
      * 更新数据库数据
      */
     fun updateShoppingCart(merchandiseBean: MerchandiseBean) {
-        mThreadFactory.newThread {
-            var bean = mDao.query(merchandiseBean.id!!)
-            if (bean == null) {
-                var list = ArrayList<MerchandiseBean>()
-                list.add(merchandiseBean)
-                mDao.insert(list)
-            } else {
-                mDao.update(merchandiseBean)
-            }
-            mActivity.runOnUiThread { }
-        }.start()
+        /* mThreadFactory.newThread {
+             var bean = mDao.query(merchandiseBean.id!!)
+             if (bean == null) {
+                 var list = ArrayList<MerchandiseBean>()
+                 list.add(merchandiseBean)
+                 mDao.insert(list)
+             } else {
+                 mDao.update(merchandiseBean)
+             }
+             mActivity.runOnUiThread { }
+         }.start()*/
+        var service = dao1.create(MerchandiseService::class.java)
+        service.query(merchandiseBean.id!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.size == 0) {
+                        var list = ArrayList<MerchandiseBean>()
+                        list.add(merchandiseBean)
+                        mDao.insert(list)
+                    } else {
+                        mDao.update(merchandiseBean)
+                    }
+                },
+                        {},
+                        {})
     }
 
     /**
@@ -82,7 +99,7 @@ class MainPresenter(activity: MainActivity) {
      */
     fun changeMerchandiseCheckedNum(data: List<MerchandiseBean>?, onQueryFinished: () -> Unit) {
         if (data == null) return
-        mThreadFactory.newThread {
+        /*mThreadFactory.newThread {
             for (bean in data) {
                 var query = mDao.query(bean.id!!)
                 if (query != null)
@@ -91,7 +108,19 @@ class MainPresenter(activity: MainActivity) {
             mActivity.runOnUiThread({
                 onQueryFinished.invoke()
             })
-        }.start()
+        }.start()*/
+
+        var service = dao1.create(MerchandiseService::class.java)
+        for (bean in data) {
+            service.query(bean.id!!).observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        if (it.isEmpty())
+                            return@subscribe
+                        var merchandiseBean = it[0]
+                        bean.num = merchandiseBean.num
+                        onQueryFinished.invoke()
+                    }, {}, {})
+        }
     }
 
     fun delete(merchandiseBean: MerchandiseBean) {
