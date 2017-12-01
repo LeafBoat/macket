@@ -11,6 +11,7 @@ import com.qi.market.network.glide.GlideApp
  * Created by Qi on 2017/11/27.
  */
 class OrderAdapter(urls: Array<String?>?) : RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
+
     var urls = urls
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         GlideApp.with(holder?.itemView?.context)

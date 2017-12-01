@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.qi.market.common.db.annotation.ColumnName;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 
@@ -12,9 +13,9 @@ import java.lang.reflect.ParameterizedType;
  * Date:2017/11/29 17:48
  * Detail:
  */
-public class CursorConverter<T> {
+public class CursorConverter {
 
-    public T converter(Cursor cursor, T obj) throws Exception {
+    public <T> T convertToObj(Cursor cursor, T obj) throws Exception {
         Field[] fields = obj.getClass().getDeclaredFields();
         for (int index = 0; index < cursor.getColumnCount(); index++) {
             String columnName = cursor.getColumnName(index);
@@ -32,7 +33,8 @@ public class CursorConverter<T> {
         return obj;
     }
 
-    private void setValue(T obj, Field field, Cursor cursor, int index) throws Exception {
+
+    private <T> void setValue(T obj, Field field, Cursor cursor, int index) throws Exception {
         if (field.getType().getName().equals(String.class.getName())) {
             field.set(obj, cursor.getString(index));
         } else if (field.getType().getName().equals(Double.class.getName())
@@ -53,5 +55,26 @@ public class CursorConverter<T> {
         } else {
             field.set(obj, cursor.getShort(index));
         }
+    }
+
+    public Pair<String, Object[]> convertToString(Object obj, Object conditionValue) throws IllegalAccessException {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        String columns = "";
+        Object[] args = (conditionValue == null) ? new Object[fields.length] : new Object[fields.length + 1];
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            args[i] =  field.get(obj);
+            ColumnName annotation = field.getAnnotation(ColumnName.class);
+            if (annotation != null) {
+                columns += annotation.value() + "=?,";
+            } else {
+                columns += field.getName() + "=?,";
+            }
+        }
+        columns.substring(0, columns.length() - 1);
+        if (conditionValue != null) {
+            args[args.length - 1] = conditionValue;
+        }
+        return new Pair<>(columns, args);
     }
 }
