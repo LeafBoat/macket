@@ -25,6 +25,7 @@ class MainPresenter(activity: MainActivity) {
     private var mThreadFactory = Executors.defaultThreadFactory()!!
     var currentCategory: MerchandiseCategoryBean? = null
     var totalNum = 0
+    val data: ArrayList<MerchandiseBean> = ArrayList()
     /**
      * 获取商品类别
      */
@@ -52,11 +53,13 @@ class MainPresenter(activity: MainActivity) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list: List<MerchandiseBean> ->
+                    data.clear()
                     if (list == null || list.isEmpty()) {
                         mActivity.fragmentShowErrorView()
                     } else {
+                        data.addAll(list)
                         mActivity.fragmentShowContentView()
-                        mActivity.refreshList(list, currentCategory!!.id)
+                        mActivity.refreshList(data, currentCategory!!.id)
                     }
                 }, {
                     mActivity.fragmentShowErrorView()
@@ -79,9 +82,11 @@ class MainPresenter(activity: MainActivity) {
                     } else {
                         mDao.update(merchandiseBean)
                     }
-                },
-                        {},
-                        {})
+                }, {
+                    it.printStackTrace()
+                }, {
+                    refreshMerchandiseNum()
+                })
     }
 
     /**
@@ -105,7 +110,12 @@ class MainPresenter(activity: MainActivity) {
     fun delete(merchandiseBean: MerchandiseBean) {
         mThreadFactory.newThread {
             mDao.delete(merchandiseBean.id!!)
+            refreshMerchandiseNum()
         }.start()
+    }
+
+    fun refreshMerchandiseNum() {
+        mActivity.updateMerchandiseTotalNum()
     }
 }
 

@@ -11,7 +11,6 @@ import com.qi.market.base.BaseFragment
 import com.qi.market.module.main.activity.MainActivity
 import com.qi.market.module.main.adapter.MerchandiseAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
-import com.qi.market.module.main.bean.MerchandiseCategoryBean
 import com.qi.market.module.main.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_merchandise.*
 
@@ -54,19 +53,14 @@ class MerchandiseFragment : BaseFragment() {
 
 
     fun refresh(data: List<MerchandiseBean>?, oldId: Long?) {
+        presenter.refreshMerchandiseNum()
         mMainActivity.presenter.changeMerchandiseCheckedNum(data, {
             if (mMainActivity.mMerchandiseCategoryId != oldId)
                 return@changeMerchandiseCheckedNum
-            presenter.totalNum = 0
-            if (data != null && !data.isEmpty()) {
-                presenter.totalNum = 0
-                for (bean in data) {
-                    presenter.totalNum += bean.num
-                }
-            }
             mMerchandiseAdapter!!.notifyDataSetChanged(data)
         })
     }
+
 
     /**
      * 展示错误页面

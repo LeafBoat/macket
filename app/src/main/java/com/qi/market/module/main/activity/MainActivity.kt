@@ -7,14 +7,19 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.qi.market.R
 import com.qi.market.base.BaseActivity
+import com.qi.market.common.db.main.SQLiteDao
 import com.qi.market.module.main.adapter.MerchandiseMenuAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.main.bean.MerchandiseCategoryBean
+import com.qi.market.module.main.db.service.MerchandiseService
 import com.qi.market.module.main.fragment.MerchandiseFragment
 import com.qi.market.module.main.presenter.MainPresenter
 import com.qi.market.module.search.SearchActivity
 import com.qi.market.module.shoppingcart.activity.ShoppingCartActivity
+import com.qi.market.module.shoppingcart.db.ShoppingCartSQLiteOpenHelper
 import kotlinx.android.synthetic.main.activity_main.*
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 /**
  * 主页，展示商品列表
@@ -22,8 +27,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
     lateinit var presenter: MainPresenter
     private var mMenuAdapter: MerchandiseMenuAdapter? = null
-    var mMerchandiseCategoryId: Long=-1
-
+    var mMerchandiseCategoryId: Long = -1
+    val dao = SQLiteDao.Builder().setSQLiteOpenHelper(ShoppingCartSQLiteOpenHelper(this)).build()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,7 +58,7 @@ class MainActivity : BaseActivity() {
         if (mMerchandiseCategoryId != oldId)
             return
         var fragment = supportFragmentManager.findFragmentByTag(MERCHANDISE_FRAGMENT) as MerchandiseFragment
-        fragment.refresh(data,oldId)
+        fragment.refresh(data, oldId)
     }
 
     /**
@@ -117,5 +122,18 @@ class MainActivity : BaseActivity() {
 
     companion object {
         val MERCHANDISE_FRAGMENT = "MERCHANDISE_FRAGMENT"
+    }
+
+    fun updateMerchandiseTotalNum() {
+        dao.create(MerchandiseService::class.java).query().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe {
+            presenter.totalNum = 0
+            if (!it.isEmpty()) {
+                presenter.totalNum = 0
+                for (bean in it) {
+                    presenter.totalNum += bean.num
+                }
+            }
+            shoppingCartActionView.text = presenter.totalNum.toString()
+        }
     }
 }
