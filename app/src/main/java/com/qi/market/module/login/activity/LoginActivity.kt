@@ -4,15 +4,9 @@ import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.app.LoaderManager.LoaderCallbacks
-import android.content.CursorLoader
-import android.content.Loader
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
@@ -20,13 +14,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.view.WindowManager
 import android.widget.TextView
 import com.qi.market.R
 import com.qi.market.module.login.bean.UserBean
 import com.qi.market.module.login.presenter.LoginPresenter
 import kotlinx.android.synthetic.main.activity_login.*
-import java.util.*
 
 /**
  * A login screen that offers login via email/password.
@@ -43,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         presenter = LoginPresenter(this)
         bindView()
         //切换登录页的状态
