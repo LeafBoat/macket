@@ -38,6 +38,9 @@ class MerchandiseDetailActivity : BaseActivity() {
         priceView.text = "￥${mMerchandiseBean.price}"
         detailView.text = mMerchandiseBean.description
         viewpager.adapter = mAdapter
+        backView.setOnClickListener {
+            onBackPressed()
+        }
         addView.setOnClickListener {
             mMerchandiseBean.num++
             updateDataBase()

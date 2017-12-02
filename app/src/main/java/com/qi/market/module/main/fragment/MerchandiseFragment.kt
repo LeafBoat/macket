@@ -57,6 +57,13 @@ class MerchandiseFragment : BaseFragment() {
         mMainActivity.presenter.changeMerchandiseCheckedNum(data, {
             if (mMainActivity.mMerchandiseCategoryId != oldId)
                 return@changeMerchandiseCheckedNum
+            presenter.totalNum = 0
+            if (data != null && !data.isEmpty()) {
+                presenter.totalNum = 0
+                for (bean in data) {
+                    presenter.totalNum += bean.num
+                }
+            }
             mMerchandiseAdapter!!.notifyDataSetChanged(data)
         })
     }

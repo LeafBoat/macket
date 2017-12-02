@@ -65,6 +65,9 @@ class ShoppingCartActivity : BaseActivity() {
                 presenter.update(merchandiseBean)
             }
         }
+        backView.setOnClickListener {
+            onBackPressed()
+        }
         editView.setOnClickListener {
             deletable = !deletable
             editView.text = if (deletable) "完成" else "编辑"

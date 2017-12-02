@@ -24,6 +24,7 @@ class MainPresenter(activity: MainActivity) {
     val dao1 = SQLiteDao.Builder().setSQLiteOpenHelper(ShoppingCartSQLiteOpenHelper(activity)).build()
     private var mThreadFactory = Executors.defaultThreadFactory()!!
     var currentCategory: MerchandiseCategoryBean? = null
+    var totalNum = 0
     /**
      * 获取商品类别
      */

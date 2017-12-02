@@ -28,6 +28,10 @@ class OrderActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
+        backView.setOnClickListener {
+            onBackPressed()
+        }
+
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
@@ -38,6 +42,7 @@ class OrderActivity : BaseActivity() {
         numView.text = String.format(getString(R.string.merchandiseNum), presenter.num)
         adapter.notifyDataSetChanged(presenter.picUrls)
         actuallyPaidView.text = String.format(getString(R.string.actuallyPaid), totalMoney)
+
         submitOrderView.setOnClickListener {
             presenter.submitOrder()
         }
@@ -46,11 +51,11 @@ class OrderActivity : BaseActivity() {
     companion object {
         val MERCHANDISE_LIST = "MERCHANDISE_LIST"
         val MONEY = "MONEY"
-        fun startActivity(context: Context, totalMoney: Double, checkedMerchandises: List<MerchandiseBean>){
+        fun startActivity(context: Context, totalMoney: Double, checkedMerchandises: List<MerchandiseBean>) {
             context.startActivity(
-                    Intent(context,OrderActivity::class.java)
-                            .putExtra(MONEY,totalMoney)
-                            .putExtra(MERCHANDISE_LIST,Gson().toJson(checkedMerchandises))
+                    Intent(context, OrderActivity::class.java)
+                            .putExtra(MONEY, totalMoney)
+                            .putExtra(MERCHANDISE_LIST, Gson().toJson(checkedMerchandises))
             )
         }
     }

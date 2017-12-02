@@ -1,5 +1,6 @@
 package com.qi.market.module.order.presenter
 
+import android.widget.Toast
 import com.qi.market.common.SharePreferenceHelper
 import com.qi.market.module.order.activity.OrderActivity
 import com.qi.market.module.order.service.OrderService
@@ -49,6 +50,9 @@ class OrderPresenter(activity: OrderActivity) {
                         }
                         activity.finish()
                     }
-                }, {}, {})
+                }, {
+                    it.printStackTrace()
+                    Toast.makeText(activity, "提交失败", Toast.LENGTH_SHORT).show()
+                })
     }
 }
