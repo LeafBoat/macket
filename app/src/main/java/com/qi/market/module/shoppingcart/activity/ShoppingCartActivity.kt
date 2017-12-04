@@ -100,6 +100,11 @@ class ShoppingCartActivity : BaseActivity() {
             presenter.delete(checkedData)
             adapter.notifyDataSetChanged(presenter.mData, deletable)
         }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         presenter.queryAll {
             adapter.notifyDataSetChanged(it, deletable)
         }

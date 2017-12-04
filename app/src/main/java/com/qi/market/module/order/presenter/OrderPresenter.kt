@@ -45,10 +45,12 @@ class OrderPresenter(activity: OrderActivity) {
         RetrofitClient.create(observable)
                 .subscribe({
                     executorService.execute {
-                        for (bean in activity.data) {
-                            shoppingCartDao.delete(bean.id!!)
+                        executorService.submit {
+                            for (bean in activity.data) {
+                                shoppingCartDao.delete(bean.id!!)
+                            }
+                            activity.finish()
                         }
-                        activity.finish()
                     }
                 }, {
                     it.printStackTrace()
