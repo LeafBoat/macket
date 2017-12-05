@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Market.iml" filepath="$PROJECT_DIR$/Market.iml" />
+      <module fileurl="file://D:\Project\macket\Market.iml" filepath="D:\Project\macket\Market.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/macket.iml" filepath="$PROJECT_DIR$/macket.iml" />
     </modules>
   </component>
 </project>

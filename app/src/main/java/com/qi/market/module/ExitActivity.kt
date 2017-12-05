@@ -10,7 +10,6 @@ import com.qi.market.common.Constant.SP_USER
 import com.qi.market.common.SharePreferenceHelper
 import com.qi.market.module.login.activity.LoginActivity
 import kotlinx.android.synthetic.main.activity_exit.*
-import java.io.File
 
 /**
  * Author:liuqi
