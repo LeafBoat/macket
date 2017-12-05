@@ -8,6 +8,7 @@ import android.view.View
 import com.qi.market.R
 import com.qi.market.base.BaseActivity
 import com.qi.market.common.db.main.SQLiteDao
+import com.qi.market.module.ExitActivity
 import com.qi.market.module.main.adapter.MerchandiseMenuAdapter
 import com.qi.market.module.main.bean.MerchandiseBean
 import com.qi.market.module.main.bean.MerchandiseCategoryBean
@@ -34,6 +35,9 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         showProgressBar()
         presenter = MainPresenter(this)
+        settingView.setOnClickListener {
+            startActivity(Intent(it.context,ExitActivity::class.java))
+        }
         searchView.setOnClickListener {
             startActivity(Intent(it.context, SearchActivity::class.java))
         }
