@@ -1,8 +1,8 @@
 package com.qi.market.module.login.presenter;
 
-import com.qi.market.module.login.bean.resopnse.LoginResponseBody;
+import com.qi.market.module.login.bean.LoginBodyBean;
+import com.qi.market.module.login.bean.RegisterBodyBean;
 
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;
@@ -14,8 +14,8 @@ import rx.Observable;
 public interface LoginService {
 
     @POST("appuser/userLogin")
-    Observable<LoginResponseBody> login(@Body Object Any);
+    Observable<LoginBodyBean> login(@Body Object Any);
 
     @POST("appuser/register_user")
-    Observable<LoginResponseBody> register(@Body Object Any);
+    Observable<RegisterBodyBean> register(@Body Object Any);
 }

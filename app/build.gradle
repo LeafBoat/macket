@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -36,6 +37,18 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { baseVariantOutput ->
+            def time = new Date().format("MMdd_HHmm", TimeZone.getDefault())
+            print("${baseVariantOutput.baseName}====================================================")
+            if (baseVariantOutput.baseName == 'release') {
+                outputFileName = "market_release_${defaultConfig.versionName}_${time}.apk"
+            } else if (baseVariantOutput.baseName == 'debug') {
+                outputFileName = "market_debug_${defaultConfig.versionName}_${time}.apk"
+            }
         }
     }
 }

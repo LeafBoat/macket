@@ -53,7 +53,7 @@ class LoginPresenter constructor(activity: LoginActivity) {
     private fun register(userBean: UserBean) {
         var observable = RetrofitClient.create(LoginService::class.java).register(userBean)
         RetrofitClient.create(observable).subscribe({
-            Toast.makeText(mActivity, it.msg, Toast.LENGTH_SHORT).show()
+            Toast.makeText(mActivity, it.message, Toast.LENGTH_SHORT).show()
             if (!it.flag!!) {
                 return@subscribe
             }

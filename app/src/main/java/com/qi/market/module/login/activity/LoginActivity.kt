@@ -4,6 +4,7 @@ import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,10 @@ import com.qi.market.R
 import com.qi.market.module.login.bean.UserBean
 import com.qi.market.module.login.presenter.LoginPresenter
 import kotlinx.android.synthetic.main.activity_login.*
+import android.view.inputmethod.InputMethodManager
+
+
+
 
 /**
  * A login screen that offers login via email/password.
@@ -45,13 +50,18 @@ class LoginActivity : AppCompatActivity() {
         }
         //登录按钮事件处理
         signView.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val isOpen = imm.isActive
+            if (isOpen){
+                imm.hideSoftInputFromWindow(signView.windowToken, 0)
+            }
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             if (state == 0) {
                 presenter.attemptRegister()
             } else if (state == 1) {
                 presenter.attemptLogin()
             }
         }
-        signView.requestFocus()
     }
 
     /**
